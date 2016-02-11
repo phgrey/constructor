@@ -1,0 +1,12 @@
+{application, constructor,
+ [
+  {description, ""},
+  {vsn, "0"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { constructor_app, []}},
+  {env, []}
+ ]}.
