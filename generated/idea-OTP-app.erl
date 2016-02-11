@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 11. Feb 2016 3:34
 %%%-------------------------------------------------------------------
--module(test2).
+-module('idea-OTP-app').
 -author("phgrey").
 
 -behaviour(application).
