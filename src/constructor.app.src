@@ -1,0 +1,11 @@
+%http://erlang.org/doc/design_principles/included_applications.html
+{application, constructor,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {included_applications, [listener]},
+  {applications, [kernel, stdlib]},
+  {mod, { listener, []}},
+  {env, []}
+ ]}.
