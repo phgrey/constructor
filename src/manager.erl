@@ -64,14 +64,15 @@ init([]) ->
 
   SupFlags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
 
-  Restart = permanent,
+  Restart = transient,
   Shutdown = 2000,
-  Type = worker,
+  Module = worker,
+  Start = {Module, start_link, []},
 
-  AChild = {'AName', {'AModule', start_link, []},
-    Restart, Shutdown, Type, ['AModule']},
+  AChilds = [ {list_to_atom("worker" ++ integer_to_list(X)), Start ,
+    Restart, Shutdown, worker, [Module]} || X <- lists:seq(0,9)],
 
-  {ok, {SupFlags, [AChild]}}.
+  {ok, {SupFlags, AChilds}}.
 
 %%%===================================================================
 %%% Internal functions

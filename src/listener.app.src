@@ -1,0 +1,10 @@
+{application, listener,
+ [
+  {description, ""},
+  {vsn, "0"},
+  {registered, []},
+  {applications, [kernel, stdlib]},
+  {modules, [listener, manager, worker, connection]},
+  {mod, { listener, []}},
+  {env, []}
+ ]}.
