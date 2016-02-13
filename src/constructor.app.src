@@ -4,7 +4,8 @@
   {description, ""},
   {vsn, "1"},
   {registered, []},
-  {included_applications, [listener]},
+%  {included_applications, [listener]},
+%  {start_phases, [{init,[]}, {go,[]}]},
   {applications, [kernel, stdlib]},
   {mod, { listener, []}},
   {env, []}
