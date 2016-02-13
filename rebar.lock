@@ -1,0 +1,4 @@
+[{<<"mysql">>,
+  {git,"git@github.com:dizzyd/erlang-mysql-driver.git",
+       {ref,"5485e3ea35e5966ac547dc269e7384b08a6b0004"}},
+  0}].
