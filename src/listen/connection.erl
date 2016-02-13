@@ -26,7 +26,9 @@
 
 -define(SERVER, ?MODULE).
 
--record(state, {}).
+-record(state, {email=false}).
+-include("emails.hrl").
+
 
 %%%===================================================================
 %%% API
@@ -61,8 +63,8 @@ start_link() ->
   {ok, StateName :: atom(), StateData :: #state{}} |
   {ok, StateName :: atom(), StateData :: #state{}, timeout() | hibernate} |
   {stop, Reason :: term()} | ignore).
-init([]) ->
-  {ok, state_name, #state{}}.
+init(Email) ->
+  {ok, state_name, #state{email=Email}}.
 
 %%--------------------------------------------------------------------
 %% @private

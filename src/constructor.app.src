@@ -3,10 +3,10 @@
  [
   {description, "Spark maybe"},
   {vsn, "1"},
-  {registered, []},
+  {registered, [database]},
 %  {included_applications, [listener]},
 %  {start_phases, [{init,[]}, {go,[]}]},
   {applications, [kernel, stdlib]},
   {mod, { listener, []}},
-  {env, []}
+  {env, [{dbpath, {"localhost","3306","root", "root", "smartback"}}]}
  ]}.

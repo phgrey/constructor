@@ -4,15 +4,17 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 11. Feb 2016 6:42
+%%% Created : 13. Feb 2016 19:40
 %%%-------------------------------------------------------------------
--module(worker).
+-module(database).
 -author("phgrey").
 
 -behaviour(gen_server).
 
 %% API
 -export([start_link/0]).
+
+-import(mysql, []).
 
 %% gen_server callbacks
 -export([init/1,
@@ -24,7 +26,10 @@
 
 -define(SERVER, ?MODULE).
 
--record(state, { connections = []}).
+-record(state, {}).
+
+-include("listen/emails.hrl").
+
 
 %%%===================================================================
 %%% API
@@ -39,7 +44,7 @@
 -spec(start_link() ->
   {ok, Pid :: pid()} | ignore | {error, Reason :: term()}).
 start_link() ->
-  gen_server:start_link(?MODULE, [], []).
+  gen_server:start_link({global, dbserver}, ?MODULE, [], []).
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -60,8 +65,7 @@ start_link() ->
   {ok, State :: #state{}} | {ok, State :: #state{}, timeout() | hibernate} |
   {stop, Reason :: term()} | ignore).
 init([]) ->
-  {ok, #state{}}.
-
+  {ok, connect()}.
 %%--------------------------------------------------------------------
 %% @private
 %% @doc
@@ -77,8 +81,13 @@ init([]) ->
   {noreply, NewState :: #state{}, timeout() | hibernate} |
   {stop, Reason :: term(), Reply :: term(), NewState :: #state{}} |
   {stop, Reason :: term(), NewState :: #state{}}).
-handle_call(_Request, _From, State) ->
-  {reply, ok, State}.
+handle_call(_Request, _From, false) ->
+  {reply, error, 'Uninitialized'};
+handle_call({sql, Query }, _From, _State) ->
+  {ok, Res} = sql(Query),
+  {reply, ok, Res};
+handle_call(_Request, _From, _State) ->
+  {reply, error, 'Wrong request or state'}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -144,3 +153,18 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+
+connect() ->
+  {ok, Creds} = application:get_env(constructor, dbpath),
+  {Host, Port, User, Password, Database} = Creds,
+  mysql:start_link(primarydb, Host, Port, User, Password, Database, true),
+  {ok, Conn} = mysql:connect(primarydb, Host, Port, User, Password, Database),
+  Conn.
+
+sql(Query) ->
+  {data, Resp} = mysql:fetch(primarydb, Query),
+  Ret = convert(Resp),
+  {ok, Ret}.
+
+convert(Resp) ->
+  {mysql:get_result_field_info(Resp), mysql:get_result_rows(Resp)}.

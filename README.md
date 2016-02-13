@@ -6,5 +6,5 @@ console in the app namespace
 
 ## HOWTO
 - run: http://stackoverflow.com/questions/16675767/how-to-run-erlang-rebar-build-application :
-    erl -pa ebin | rebar shell
-    1> constructor:start().
+    erl -pa ebin | rebar3 shell
+    1> application:start(constructor).
