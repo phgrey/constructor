@@ -1,4 +1,3 @@
 /.idea
-/.rebar
-/ebin
+/_*
 *.beam
