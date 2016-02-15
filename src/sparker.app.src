@@ -1,12 +1,12 @@
 %http://erlang.org/doc/design_principles/included_applications.html
-{application, constructor,
+{application, sparker,
  [
   {description, "Spark maybe"},
   {vsn, "1"},
-  {registered, [database]},
+  {registered, [dbserver]},
 %  {included_applications, [listener]},
 %  {start_phases, [{init,[]}, {go,[]}]},
   {applications, [kernel, stdlib]},
-  {mod, { listener, []}},
-  {env, [{dbpath, {"localhost","3306","root", "root", "smartback"}}]}
+  {mod, {sparker, []}},
+  {env, [{dbpath, {"localhost",3306,"root", "root", "smartback"}}]}
  ]}.

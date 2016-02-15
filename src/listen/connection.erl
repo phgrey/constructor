@@ -12,7 +12,7 @@
 -behaviour(gen_fsm).
 
 %% API
--export([start_link/0]).
+-export([start_link/1]).
 
 %% gen_fsm callbacks
 -export([init/1,
@@ -42,9 +42,9 @@
 %%
 %% @end
 %%--------------------------------------------------------------------
--spec(start_link() -> {ok, pid()} | ignore | {error, Reason :: term()}).
-start_link() ->
-  gen_fsm:start_link({local, ?SERVER}, ?MODULE, [], []).
+-spec(start_link(Email :: atom()) -> {ok, pid()} | ignore | {error, Reason :: term()}).
+start_link(Email) ->
+  gen_fsm:start_link({local, ?SERVER}, ?MODULE, [Email], []).
 
 %%%===================================================================
 %%% gen_fsm callbacks

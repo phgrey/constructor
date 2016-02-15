@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 12. Feb 2016 17:42
 %%%-------------------------------------------------------------------
--module(listener).
+-module(sparker).
 -author("phgrey").
 
 -behaviour(application).

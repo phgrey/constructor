@@ -44,7 +44,8 @@
 -spec(start_link() ->
   {ok, Pid :: pid()} | ignore | {error, Reason :: term()}).
 start_link() ->
-  gen_server:start_link({global, dbserver}, ?MODULE, [], []).
+  gen_server:start_link({local, dbserver}, ?MODULE, [], []).
+%%  gen_server:start_link({global, dbserver}, ?MODULE, [], []).
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -155,10 +156,10 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 
 connect() ->
-  {ok, Creds} = application:get_env(constructor, dbpath),
+  {ok, Creds} = application:get_env(sparker, dbpath),
   {Host, Port, User, Password, Database} = Creds,
-  mysql:start_link(primarydb, Host, Port, User, Password, Database, true),
-  {ok, Conn} = mysql:connect(primarydb, Host, Port, User, Password, Database),
+  mysql:start_link(primarydb, Host, User, Password, Database),
+  {ok, Conn} = mysql:connect(primarydb, Host, undefined, User, Password, Database, true),
   Conn.
 
 sql(Query) ->

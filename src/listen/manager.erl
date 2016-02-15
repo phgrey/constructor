@@ -67,12 +67,13 @@ init([]) ->
   Restart = transient,
   Shutdown = 2000,
   Module = worker,
-  Start = {Module, start_link, []},
 
-  AChilds = [ {list_to_atom("worker" ++ integer_to_list(X)), Start ,
+  Workers = [ {list_to_atom("worker" ++ integer_to_list(X)), {Module, start_link, []},
     Restart, Shutdown, worker, [Module]} || X <- lists:seq(0,9)],
 
-  {ok, {SupFlags, AChilds}}.
+  Services = [{dbserver, {database, start_link, []}, transient, 2000, worker, [database]}],
+
+  {ok, {SupFlags, Services ++ Workers}}.
 
 %%%===================================================================
 %%% Internal functions
