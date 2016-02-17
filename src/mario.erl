@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 11. Feb 2016 6:42
 %%%-------------------------------------------------------------------
--module(worker).
+-module(mario).
 -author("phgrey").
 
 -behaviour(gen_server).

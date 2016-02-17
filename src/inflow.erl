@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 11. Feb 2016 8:21
 %%%-------------------------------------------------------------------
--module(manager).
+-module(inflow).
 -author("phgrey").
 
 -behaviour(supervisor).
@@ -66,14 +66,14 @@ init([]) ->
 
   Restart = transient,
   Shutdown = 2000,
-  Module = worker,
+  Module = mario,
 
-  Workers = [ {list_to_atom("worker" ++ integer_to_list(X)), {Module, start_link, []},
+  Marios = [ {list_to_atom("worker" ++ integer_to_list(X)), {Module, start_link, []},
     Restart, Shutdown, worker, [Module]} || X <- lists:seq(0,9)],
 
   Services = [{dbserver, {database, start_link, []}, transient, 2000, worker, [database]}],
 
-  {ok, {SupFlags, Services ++ Workers}}.
+  {ok, {SupFlags, Services ++ Marios}}.
 
 %%%===================================================================
 %%% Internal functions

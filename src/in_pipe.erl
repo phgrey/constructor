@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 11. Feb 2016 8:20
 %%%-------------------------------------------------------------------
--module(connection).
+-module(in_pipe).
 -author("phgrey").
 
 -behaviour(gen_fsm).

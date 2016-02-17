@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 13. Feb 2016 19:40
 %%%-------------------------------------------------------------------
--module(database).
+-module(cache).
 -author("phgrey").
 
 -behaviour(gen_server).
