@@ -1,11 +1,17 @@
+%% Data used in application
+%% inspired by
+%% http://learnyousomeerlang.com/dialyzer
+%% http://erlang.org/doc/programming_examples/records.html#id59193
+%% http://erlang.org/doc/reference_manual/typespec.html
 
-%%%% CACHEABLE DATA - in plain db
+
+%%%% CACHEABLE DATA - for plain db
 %primary types
 -type protocol() :: ews|imap|smtp|apn.
 
 -type email() :: atom() | {atom()} | {atom(), protocol()}.
 
-% for push
+% for push token
 -type push_token() :: <<_:50>>.
 
 %%secondary types, almost records
@@ -31,22 +37,16 @@
 -type linking() :: #linking{}.
 
 %%%typed tree
--type link2typed() :: {OwnType :: device|account, linking()}.
-
-
+%%-type link2typed() :: {OwnType :: device|account, linking()}.
 %%some strange fucking shit
--record(device_account, {token :: push_token(), email_accounts = [] :: [email_account()] }).
--record(email_account, {email::email(), device_accounts = [] :: [device_account()] }).
-
-
-
+%%-record(device_account, {token :: push_token(), email_accounts = [] :: [email_account()] }).
+%%-record(email_account, {email::email(), device_accounts = [] :: [device_account()] }).
 %%few more datatypes - dunno why
--record(link2device, {token::push_token(), creds :: credentials()}).
--type link2device() :: #link2device{}.
--record(link2email, {email::email(), creds :: credentials() }).
--type link2email() :: #link2email{}.
-
--record(device_account, {token :: push_token(), emails = [] :: [link2email()] }).
--type device_account() :: #device_account{}.
--record(email_account, {email::email(), devices = [] :: [link2device()] }).
--type email_account() :: #email_account{}.
+%%-record(link2device, {token::push_token(), creds :: credentials()}).
+%%-type link2device() :: #link2device{}.
+%%-record(link2email, {email::email(), creds :: credentials() }).
+%%-type link2email() :: #link2email{}.
+%%-record(device_account, {token :: push_token(), emails = [] :: [link2email()] }).
+%%-type device_account() :: #device_account{}.
+%%-record(email_account, {email::email(), devices = [] :: [link2device()] }).
+%%-type email_account() :: #email_account{}.

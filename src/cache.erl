@@ -26,9 +26,9 @@
 
 -define(SERVER, ?MODULE).
 
--record(state, {}).
+-include("messages.hrl").
 
--include("listen/emails.hrl").
+-record(state, {}).
 
 
 %%%===================================================================
