@@ -28,8 +28,8 @@
 -type credentials() ::  {Server :: server(), Auth :: auth(), Additional :: #{}}.
 
 %spark account meaning
--record(account, {email::email(), token :: push_token(), auth :: credentials() }).
-%-type account() :: #account{}.
+-record(account, {email::email(), token :: push_token(), creds :: credentials() }).
+-type account() :: #account{}.
 
 %%%%% some recursive structure for fun and tree building
 
@@ -43,10 +43,12 @@
 %%-record(email_account, {email::email(), device_accounts = [] :: [device_account()] }).
 %%few more datatypes - dunno why
 %%-record(link2device, {token::push_token(), creds :: credentials()}).
-%%-type link2device() :: #link2device{}.
+-type link2device() :: {Token ::push_token(), Creds :: credentials()}.
 %%-record(link2email, {email::email(), creds :: credentials() }).
 %%-type link2email() :: #link2email{}.
 %%-record(device_account, {token :: push_token(), emails = [] :: [link2email()] }).
 %%-type device_account() :: #device_account{}.
 %%-record(email_account, {email::email(), devices = [] :: [link2device()] }).
 %%-type email_account() :: #email_account{}.
+
+-type in_pipe() :: { port(), email(), Devices :: [link2device()] }.

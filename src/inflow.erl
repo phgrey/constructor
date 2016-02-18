@@ -12,7 +12,7 @@
 -behaviour(supervisor).
 
 %% API
--export([start_link/0]).
+-export([start_link/0, start_pipe/1]).
 
 %% Supervisor callbacks
 -export([init/1]).
@@ -75,6 +75,14 @@ init([]) ->
 
   {ok, {SupFlags, Services ++ Marios}}.
 
+start_pipe(Email)->
+  ChildSpec = pipe_spec(Email),
+  supervisor:start_child(?SERVER, ChildSpec).
+
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
+
+pipe_spec(Email)->
+  {Email, {in_pipe, start_link, [Email]}, permanent, 2000, worker, [in_pipe]}.
+

@@ -1,3 +1,6 @@
 /.idea
 /_*
 *.beam
+/.rebar
+/ebin
+/deps

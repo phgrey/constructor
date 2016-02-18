@@ -2,7 +2,18 @@
 %%% @author phgrey
 %%% @copyright (C) 2016, <COMPANY>
 %%% @doc
+%%%  https://github.com/archaelus/erlmail - 8y
+%%%  https://github.com/boorad/erlimap - 4y, .dot
+%%%  https://github.com/corecode/eimap - 3y, lisp, macro, !!!!, 3/1/1
 %%%
+%%%  https://git.kolab.org/diffusion/EI/ - right now
+%%%  https://github.com/RYTong/erlmail-client - 3y
+%%%
+%%%  https://github.com/vagabond/diemap - peg, neotomna (https://github.com/seancribbs/neotoma)
+%%%
+%%%
+%%%
+
 %%% @end
 %%% Created : 11. Feb 2016 8:20
 %%%-------------------------------------------------------------------
@@ -45,7 +56,7 @@
 %%--------------------------------------------------------------------
 -spec(start_link(Email :: atom()) -> {ok, pid()} | ignore | {error, Reason :: term()}).
 start_link(Email) ->
-  gen_fsm:start_link({local, ?SERVER}, ?MODULE, [Email], []).
+  gen_fsm:start_link({local, Email}, ?MODULE, [Email], []).
 
 %%%===================================================================
 %%% gen_fsm callbacks
