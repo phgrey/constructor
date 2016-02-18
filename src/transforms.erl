@@ -41,4 +41,4 @@ pipe_me_in(Req) when is_list(Req) ->
   pipe_me_in(Account);
 pipe_me_in(Acc) when is_record(Acc, account) ->
   P = get_pipe(Acc#account.email),
-  P ! {account, Acc}
+  P ! {account, Acc}.

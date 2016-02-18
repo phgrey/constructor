@@ -6,10 +6,10 @@
 %%%  https://github.com/boorad/erlimap - 4y, .dot
 %%%  https://github.com/corecode/eimap - 3y, lisp, macro, !!!!, 3/1/1
 %%%
-%%%  https://git.kolab.org/diffusion/EI/ - right now
-%%%  https://github.com/RYTong/erlmail-client - 3y
+%%%  https://git.kolab.org/diffusion/EI/ - right now - so-so, command is behaviour
+%%%  https://github.com/RYTong/erlmail-client - 3y - BAD
 %%%
-%%%  https://github.com/vagabond/diemap - peg, neotomna (https://github.com/seancribbs/neotoma)
+%%%  https://github.com/vagabond/diemap - peg, neotomna (https://github.com/seancribbs/neotoma), SERVER
 %%%
 %%%
 %%%
