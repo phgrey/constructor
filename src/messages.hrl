@@ -51,4 +51,4 @@
 %%-record(email_account, {email::email(), devices = [] :: [link2device()] }).
 %%-type email_account() :: #email_account{}.
 
--type in_pipe() :: { port(), email(), Devices :: [link2device()] }.
+-type in_pipe() :: { pid(), email(), Devices :: [link2device()] }.

@@ -8,5 +8,6 @@
 %  {start_phases, [{init,[]}, {go,[]}]},
   {applications, [kernel, stdlib]},
   {mod, {sparker, []}},
-  {env, [{dbpath, {"localhost",3306,"root", "root", "smartback"}}]}
+  {env, [{dbpath, [{host, "localhost"}, {user, "root"},
+   {password, "root"}, {database, "smartback"}]}]}
  ]}.

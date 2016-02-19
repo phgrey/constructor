@@ -20,13 +20,13 @@
 %%% helpers
 
 %%TODO: implement
--spec(pipe_me_in(iolist() ) -> account()).
+-spec(parse_account(iolist()) -> account()).
 parse_account(Req) ->
   #account{email = list_to_atom(Req)}.
 
 %%TODO: this is a robustivity test for erlang))))
 %%single observer, tonns of global names - fixit!
--spec(get_pipe(atom)->port()).
+-spec(get_pipe(Email :: atom)->pid()).
 get_pipe(Email)->
   case whereis(Email) of
     undefined ->
