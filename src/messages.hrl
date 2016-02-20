@@ -17,7 +17,7 @@
 %%secondary types, almost records
 
 %% probably divide in in_server / out_server by protocols?
--record(server, {protocol::protocol(), host :: atom(), port :: pos_integer(), encrypt :: plain|ssl|startls, additional = #{} }).
+-record(server, {protocol::protocol(), host :: atom(), port :: pos_integer(), crypt :: plain|ssl|startls }).
 -type server() :: #server{}.
 
 -type auth() :: { plain, Login :: atom(), Pass :: atom() }

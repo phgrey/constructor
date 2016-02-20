@@ -8,3 +8,9 @@ console in the app namespace
 - run: http://stackoverflow.com/questions/16675767/how-to-run-erlang-rebar-build-application :
     erl -pa ebin | rebar3 shell
     1> application:start(constructor).
+
+
+### TODOs:
+- add a config
+- think about own, non-erlang standard email processes registration
+- move servers oauth credentials to a small config

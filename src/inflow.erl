@@ -12,7 +12,7 @@
 -behaviour(supervisor).
 
 %% API
--export([start_link/0, start_pipe/1]).
+-export([start_link/0, serve_account/1]).
 
 %% Supervisor callbacks
 -export([init/1]).
@@ -58,31 +58,27 @@ start_link() ->
   ignore |
   {error, Reason :: term()}).
 init([]) ->
-  RestartStrategy = one_for_one,
-  MaxRestarts = 1000,
-  MaxSecondsBetweenRestarts = 3600,
+  PoolName = marios,
 
-  SupFlags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
+  Marios = poolboy:child_spec(PoolName, [
+    {name, {local, PoolName}},
+    {worker_module, mario},
+    {size, 5},
+    {max_overflow, 10}
+  ], [{hello, 'Mario'}]),
 
-  Restart = transient,
-  Shutdown = 2000,
-  Module = mario,
+  Services = [{dbserver, {cache, start_link, []}, transient, 2000, worker, [cache]}],
 
-  Marios = [ {list_to_atom("worker" ++ integer_to_list(X)), {Module, start_link, []},
-    Restart, Shutdown, worker, [Module]} || X <- lists:seq(0,9)],
+  {ok, {{one_for_one, 10, 10}, Services ++ Marios}}.
 
-  Services = [{dbserver, {database, start_link, []}, transient, 2000, worker, [database]}],
 
-  {ok, {SupFlags, Services ++ Marios}}.
-
-start_pipe(Email)->
-  ChildSpec = pipe_spec(Email),
-  supervisor:start_child(?SERVER, ChildSpec).
+serve_account(Acc)->
+  poolboy:transaction(marios, fun(Worker) ->
+    gen_server:cast(Worker, {account, Acc})
+  end).
 
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
 
-pipe_spec(Email)->
-  {Email, {in_pipe, start_link, [Email]}, permanent, 2000, worker, [in_pipe]}.
 
