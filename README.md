@@ -13,4 +13,5 @@ console in the app namespace
 ### TODOs:
 - add a config
 - think about own, non-erlang standard email processes registration
-- move servers oauth credentials to a small config
+- move servers oauth credentials to a small config singleton instance
+- howto extend

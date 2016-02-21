@@ -1,48 +1,41 @@
-%% timer checker, copied from http://stackoverflow.com/a/17849176
-
--module(starter).
+-module(castle).
 -behaviour(gen_server).
 -define(SERVER, ?MODULE).
+
+-include("messages.hrl").
+-import(store, []).
+
+-type state() :: [{Email :: email(), Accounts :: [account()], UsedToken :: push_token(), Socket :: port()}].
 
 %% ------------------------------------------------------------------
 %% API Function Exports
 %% ------------------------------------------------------------------
 
--export([start_link/0]).
+-export([start_link/1]).
 
 %% ------------------------------------------------------------------
 %% gen_server Function Exports
 %% ------------------------------------------------------------------
 
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
-         terminate/2, code_change/3]).
+  terminate/2, code_change/3]).
 
-
-%%-include("messages.hrl").
-
--import(poolboy, []).
 %% ------------------------------------------------------------------
 %% API Function Definitions
 %% ------------------------------------------------------------------
 
-start_link() ->
-    gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
+start_link(Emails) ->
+%%  put(sup, self()),
+  gen_server:start_link(?MODULE, [Emails], []).
 
 %% ------------------------------------------------------------------
 %% gen_server Function Definitions
 %% ------------------------------------------------------------------
 
-init([]) ->
-    Timer = erlang:send_after(1, self(), check),
-    {ok, Timer}.
-
-handle_info(check, OldTimer) ->
-  erlang:cancel_timer(OldTimer),
-  manager(),
-  Timer = erlang:send_after(1000, self(), check),
-  {noreply, Timer}.
-
-%%generated code
+init(Emails) ->
+  Accounts = store:get_accounts(Emails),
+  Sockets = [inflow:serve_pool(As) || {_, As} <- Accounts ],
+  {ok, Sockets}.
 
 handle_call(_Request, _From, State) ->
   {reply, ok, State}.
@@ -51,22 +44,20 @@ handle_cast(_Msg, State) ->
   {noreply, State}.
 
 
+handle_info({tcp_closed, _Socket}, S) ->
+  {stop, normal, S};
+handle_info({tcp_error, _Socket, _}, S) ->
+  {stop, normal, S};
+handle_info(_E, S) ->
+  {noreply, S}.
+
 terminate(_Reason, _State) ->
-    ok.
+  ok.
 
 code_change(_OldVsn, State, _Extra) ->
-    {ok, State}.
+  {ok, State}.
 
 %% ------------------------------------------------------------------
 %% Internal Function Definitions
 %% ------------------------------------------------------------------
-
-manager() ->
-  Emails = legacydb:get_emails(100),
-  if
-    length(Emails) > 0 ->
-      Rows = legacydb:get_accounts(Emails),
-      inflow:serve_accounts([{legacydb, X} || X <- Rows]);
-    true -> []
-  end.
 

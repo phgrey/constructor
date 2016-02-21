@@ -12,7 +12,7 @@
 -behaviour(supervisor).
 
 %% API
--export([start_link/0, serve_account/1]).
+-export([start_link/0, serve/2]).
 
 %% Supervisor callbacks
 -export([init/1]).
@@ -65,17 +65,18 @@ init([]) ->
     {worker_module, mario},
     {size, 5},
     {max_overflow, 10}
-  ], [{hello, 'Mario'}]),
+  ], [self()]),
 
-  Services = [{dbserver, {cache, start_link, []}, transient, 2000, worker, [cache]}],
+  Services = [{dbserver, {legacydb, start_link, []}, transient, 2000, worker, [legacydb]}],
 
-  {ok, {{one_for_one, 10, 10}, Services ++ Marios}}.
+  {ok, {{one_for_one, 1000, 10}, Services ++ Marios}}.
 
 
-serve_account(Acc)->
+serve (Type, Acc)->
   poolboy:transaction(marios, fun(Worker) ->
-    gen_server:cast(Worker, {account, Acc})
+    gen_server:call(Worker, {Type, Acc})
   end).
+
 
 %%%===================================================================
 %%% Internal functions

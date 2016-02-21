@@ -11,7 +11,8 @@
 %%%
 %%%  https://github.com/vagabond/diemap - peg, neotomna (https://github.com/seancribbs/neotoma), SERVER
 %%%
-%%%
+%%%  This is a wrappper around email process. Mostly code here is runned inside worker process. Later we'll be able
+%%% to choose listening type here according to an account type
 %%%
 
 %%% @end
@@ -20,21 +21,7 @@
 -module(in_pipe).
 -author("phgrey").
 
--behaviour(gen_fsm).
-
 %% API
--export([start_link/1]).
-
-%% gen_fsm callbacks
--export([init/1,
-  state_name/2,
-  state_name/3,
-  handle_event/3,
-  handle_sync_event/4,
-  handle_info/3,
-  terminate/3,
-  code_change/4]).
-
 -define(SERVER, ?MODULE).
 
 -include("messages.hrl").
@@ -42,21 +29,13 @@
 -record(state, {email=false}).
 
 
+
 %%%===================================================================
 %%% API
 %%%===================================================================
 
-%%--------------------------------------------------------------------
-%% @doc
-%% Creates a gen_fsm process which calls Module:init/1 to
-%% initialize. To ensure a synchronized start-up procedure, this
-%% function does not return until Module:init/1 has returned.
-%%
-%% @end
-%%--------------------------------------------------------------------
--spec(start_link(Email :: atom()) -> {ok, pid()} | ignore | {error, Reason :: term()}).
-start_link(Email) ->
-  gen_fsm:start_link({local, Email}, ?MODULE, [Email], []).
+
+
 
 %%%===================================================================
 %%% gen_fsm callbacks
@@ -75,8 +54,8 @@ start_link(Email) ->
   {ok, StateName :: atom(), StateData :: #state{}} |
   {ok, StateName :: atom(), StateData :: #state{}, timeout() | hibernate} |
   {stop, Reason :: term()} | ignore).
-init(Email) ->
-  {ok, state_name, #state{email=Email}}.
+init() ->
+  {ok, state_name, #state{}}.
 
 %%--------------------------------------------------------------------
 %% @private

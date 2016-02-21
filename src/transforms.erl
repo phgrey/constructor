@@ -10,30 +10,36 @@
 -author("phgrey").
 
 %% API
--export([pipe_me_in/1]).
+-export([pipe_me_in/1, parse_account/1, accounts_to_in_pipe/1]).
 
 -include("messages.hrl").
 
 -import(in_pipe, [start_link/1]).
+-import(jsx, [decode/1]).
+
 %%%% part1 - from client's http request to established incoming port
 
 %%% helpers
 
-%%TODO: implement
--spec(parse_account(iolist()) -> account()).
-parse_account(Req) ->
+-spec(parse_account({legacydb|http, Data :: term()}) -> account()).
+parse_account({legacydb, DbData})->
+  {Email, Password, OauthRefresh, Token, Protocol, Host, Port, Crypt, ServerAddJSON} = DbData,
+  Server = #server{protocol = list_to_atom(Protocol), host = list_to_atom(Host), port=Port, crypt = list_to_atom(Crypt)},
+  %%TODO: more complicated, add servertype check and throw if type is wrong. Also Adds should be checked
+  Auth = if
+           OauthRefresh == [] ->  { plain, Email, Password};
+           Password == [] ->   { oauth, <<>>, OauthRefresh}
+         end,
+  Add = jsx:decode(ServerAddJSON),
+  #account{email = list_to_atom(Email), token = list_to_binary(Token), creds={Server, Auth, Add} };
+parse_account({http, Req}) ->
   #account{email = list_to_atom(Req)}.
 
-%%TODO: this is a robustivity test for erlang))))
-%%single observer, tonns of global names - fixit!
--spec(get_pipe(Email :: atom)->pid()).
-get_pipe(Email)->
-  case whereis(Email) of
-    undefined ->
-      inflow:start_pipe(Email);
-    Pid ->
-      Pid
-  end.
+-spec accounts_to_in_pipe(Accounts :: [account()])->in_pipe().
+accounts_to_in_pipe([#account{email=Email, token=Token, creds=Creds }|Oher])->
+  Devices = [{Token, Creds}] ++ [{T, C} || #account{email=Email, token=T, creds=C } <- Oher ],
+  #in_pipe{email=Email, token=Token, device_credentials = Devices}.
+
 
 -spec(pipe_me_in(iolist() | account()) -> in_pipe()).
 pipe_me_in(Req) when is_list(Req) ->

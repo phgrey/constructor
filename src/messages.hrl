@@ -5,7 +5,7 @@
 %% http://erlang.org/doc/reference_manual/typespec.html
 
 
-%%%% CACHEABLE DATA - for plain db
+%%%% legacydbABLE DATA - for plain db
 %primary types
 -type protocol() :: ews|imap|smtp|apn.
 
@@ -31,10 +31,16 @@
 -record(account, {email::email(), token :: push_token(), creds :: credentials() }).
 -type account() :: #account{}.
 
+-type device_credentials() :: {Token ::push_token(), Creds :: credentials()}.
+-record(in_pipe, {email::email(), token :: push_token(), device_credentials :: [device_credentials()] }).
+-type account() :: #account{}.
+
+
+
 %%%%% some recursive structure for fun and tree building
 
--record(linking, {own::push_token()|email(), other::linking(), creds :: credentials()}).
--type linking() :: #linking{}.
+%%-record(linking, {own::push_token()|email(), other::linking(), creds :: credentials()}).
+%%-type linking() :: #linking{}.
 
 %%%typed tree
 %%-type link2typed() :: {OwnType :: device|account, linking()}.
@@ -43,7 +49,8 @@
 %%-record(email_account, {email::email(), device_accounts = [] :: [device_account()] }).
 %%few more datatypes - dunno why
 %%-record(link2device, {token::push_token(), creds :: credentials()}).
--type link2device() :: {Token ::push_token(), Creds :: credentials()}.
+%%-type in_pipe() :: {Email :: email(), Links :: [link2device()], UsedToken :: push_token(), Socket :: port()}.
+
 %%-record(link2email, {email::email(), creds :: credentials() }).
 %%-type link2email() :: #link2email{}.
 %%-record(device_account, {token :: push_token(), emails = [] :: [link2email()] }).
@@ -51,4 +58,3 @@
 %%-record(email_account, {email::email(), devices = [] :: [link2device()] }).
 %%-type email_account() :: #email_account{}.
 
--type in_pipe() :: { pid(), email(), Devices :: [link2device()] }.
