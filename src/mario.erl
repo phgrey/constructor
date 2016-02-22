@@ -21,15 +21,19 @@ init(Sup) ->
   {ok, {idle}}.
 
 %%adding a single account, probably from the clientgate request
-handle_call({account, Acc}, _From, {idle}) ->
+handle_call({account, Acc}, _From, _State) ->
   case store:locate_pipe(Acc#account.email) of
     undefined ->
       {ok, Pid} = start_pipe(Acc, get(sup));
-    Pid ->
-      {exists, Pid}
-  end,
-  {reply, ok, {account, Acc}};
 
+    Pid ->
+      #account{email=_, token=T, creds=C} = Acc,
+      Pid ! {add_device, Acc},
+      {reply, ok, {idle}}
+  end;
+
+%%adding a single account, probably from the clientgate request
+handle_call({in_pipe, Creds}, From, {idle}) ->
 
 
 handle_call(_Request, _From, State) ->
@@ -53,18 +57,6 @@ terminate(_Reason, State) ->
 
 code_change(_OldVsn, State, _Extra) ->
   {ok, State}.
-
-
-
-%%%===================================================================
-%%% Email registering task
-%%%===================================================================
-%%TODO: this is a robustivity test for erlang)))) single observer, tonns of global names - fixit!
-get_pipe(Email)->
-  whereis(Email).
-
-set_pipe(Email, Pid)->
-  register({local, Email}, Pid).
 
 
 %%%===================================================================

@@ -1,4 +1,4 @@
--module(castle).
+-module(in_pool).
 -behaviour(gen_server).
 -define(SERVER, ?MODULE).
 
@@ -34,7 +34,7 @@ start_link(Emails) ->
 
 init(Emails) ->
   Accounts = store:get_accounts(Emails),
-  Sockets = [inflow:serve_pool(As) || {_, As} <- Accounts ],
+  Sockets = [inflow:serve(in_pipe, As) || {_, As} <- Accounts ],
   {ok, Sockets}.
 
 handle_call(_Request, _From, State) ->

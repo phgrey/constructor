@@ -14,7 +14,6 @@
 
 -include("messages.hrl").
 
--import(in_pipe, [start_link/1]).
 -import(jsx, [decode/1]).
 
 %%%% part1 - from client's http request to established incoming port
@@ -38,7 +37,7 @@ parse_account({http, Req}) ->
 -spec accounts_to_in_pipe(Accounts :: [account()])->in_pipe().
 accounts_to_in_pipe([#account{email=Email, token=Token, creds=Creds }|Oher])->
   Devices = [{Token, Creds}] ++ [{T, C} || #account{email=Email, token=T, creds=C } <- Oher ],
-  #in_pipe{email=Email, token=Token, device_credentials = Devices}.
+  #in_pipe{email=Email, token=Token, devices = Devices}.
 
 
 -spec(pipe_me_in(iolist() | account()) -> in_pipe()).

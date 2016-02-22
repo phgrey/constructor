@@ -32,8 +32,8 @@
 -type account() :: #account{}.
 
 -type device_credentials() :: {Token ::push_token(), Creds :: credentials()}.
--record(in_pipe, {email::email(), token :: push_token(), device_credentials :: [device_credentials()] }).
--type account() :: #account{}.
+-record(in_pipe, {email::email(), token :: push_token(), devices :: [device_credentials()] }).
+-type in_pipe() :: #in_pipe{}.
 
 
 
