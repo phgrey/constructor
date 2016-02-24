@@ -49,7 +49,7 @@ start({Server, Auth, Add})->
 
 socket_options(#{nasty_ssl := true}=Add) ->
   [{verify, verify_none}] ++ socket_options(maps:remove(nasty_ssl, Add));
-socket_options(_Add) ->
+socket_options(_) ->
   [binary, { active, once }, { send_timeout, 5000 }].
 
 

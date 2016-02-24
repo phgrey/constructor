@@ -10,7 +10,7 @@
 -author("phgrey").
 
 %% API
--export([pipe_me_in/1, parse_account/1, accounts_to_in_pipe/1]).
+-export([parse_account/1, accounts_to_in_pipe/1]).
 
 -include("messages.hrl").
 
@@ -39,11 +39,3 @@ accounts_to_in_pipe([#account{email=Email, token=Token, creds=Creds }|Oher])->
   Devices = [{Token, Creds}] ++ [{T, C} || #account{email=Email, token=T, creds=C } <- Oher ],
   #in_pipe{email=Email, token=Token, devices = Devices}.
 
-
--spec(pipe_me_in(iolist() | account()) -> in_pipe()).
-pipe_me_in(Req) when is_list(Req) ->
-  {ok, Account} = parse_account(Req),
-  pipe_me_in(Account);
-pipe_me_in(Acc) when is_record(Acc, account) ->
-  P = get_pipe(Acc#account.email),
-  P ! {account, Acc}.
